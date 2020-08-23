@@ -1,4 +1,4 @@
-const TRAITS = require('./traits');
+const TRAITS = require('../data/traits');
 
 const DEFAULT_PROPS = { //screamcase often used for constants that don't change throughout the application
     nickname: 'unnamed',
