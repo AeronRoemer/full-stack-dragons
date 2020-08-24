@@ -1,7 +1,9 @@
-const TRAITS = require('../data/traits');
+const TRAITS = require('../../data/traits');
 
 const DEFAULT_PROPS = { //screamcase often used for constants that don't change throughout the application
     nickname: 'unnamed',
+    generationId: undefined, 
+    dragonId: undefined,
     //getter is used so the 'date' time is created when the new dragon is constructed, not when 'dragon.js' file opens
     get birthdate(){
         return new Date();
@@ -23,10 +25,12 @@ const DEFAULT_PROPS = { //screamcase often used for constants that don't change 
 class Dragon {
     //set constructor to accept an object so order of arguments isn't important.
     //set an empty object as default so if 'new Dragon()' is called without arguents does not return "Cannot destructure property 'birthdate' of 'undefined' as it is undefined."" 
-    constructor({ birthdate, nickname, traits } = {}){
+    constructor({ dragonId, birthdate, nickname, traits, generationId } = {}){
+        this.dragonId  = dragonId || DEFAULT_PROPS.dragonId;
         this.birthdate  = birthdate || DEFAULT_PROPS.birthdate;
         this.nickname = nickname || DEFAULT_PROPS.nickname;
         this.traits = traits || DEFAULT_PROPS.randomTraits;
+        this.generationId = generationId || DEFAULT_PROPS.generationId;
     }
 }
 
