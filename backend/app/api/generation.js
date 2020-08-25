@@ -3,7 +3,7 @@ const router = new Router();
 
 router.get('/', (req, res) =>{
     res.json({
-        dragon: req.app.locals.engine.generation
+        generation: req.app.locals.engine.generation
     })
 });
 
