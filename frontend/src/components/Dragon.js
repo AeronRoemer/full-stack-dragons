@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import DragonAvatar from './DragonAvatar';
 
 class Dragon extends Component{
     state = { dragon: {
@@ -8,13 +9,22 @@ class Dragon extends Component{
         birthdate: '',
         traits: []
     }};
+    componentDidMount(){
+        this.fetchDragon();
+    }
+    fetchDragon = () => {
+        fetch('http://localhost:3000/dragon/new')
+            .then(response => response.json())
+            .then(json => this.setState({dragon: json.dragon}))
+            .catch(error => console.error('error', error))
+    }
     render(){
-        const { dragon } = this.state;
         return(
             <div>
-                <span>G{dragon.generationId}</span>
-                <span>I{dragon.dragonId}</span>
-                {dragon.traits.map(trait => trait.traitValue).join(", ")}
+                {//without callback the fethcDragon() would be called at the same time as render, creating a loop 
+                }
+                <button onClick={() => this.fetchDragon()}>New Dragon</button>
+                <DragonAvatar dragon={this.state.dragon} />
             </div>
         )
     }
