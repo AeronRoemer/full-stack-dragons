@@ -22,6 +22,8 @@ class DragonAvatar extends Component{
         });
         const { backgroundColor, build, pattern, size } = dragonPropertyMap;
         const sizing = { width: size, height: size }
+        const dragon = this.props.dragon;
+        
         return (
             <div className="dragon-avatar-image-wrapper">
                     <div className='dragon-avatar-image-background' style={{ backgroundColor, sizing }}>
@@ -33,6 +35,7 @@ class DragonAvatar extends Component{
     }
     render(){
         const dragon = this.props.dragon;
+        if (!dragon.dragonId) return <div></div>
         return(
             <div>
                 <span>G{dragon.generationId}</span>
