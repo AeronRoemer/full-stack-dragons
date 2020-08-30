@@ -28,9 +28,9 @@ class Generation extends Component{
     
     render(){
         const {generation} = this.props
-        // if (generation.status === fetchStates.fetching){
-        //     return <div>...</div>;
-        // }
+        if (generation.status === fetchStates.fetching){
+            return <div>...</div>;
+         }
         //return that escapes out early is called a 'guard clause'
         if (generation.status === fetchStates.error){
             return <div>{generation.message}</div>;

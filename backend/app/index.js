@@ -11,7 +11,7 @@ const app = express();
 const engine = new GenerationEngine();
 app.locals.engine = engine; //gives access to engine across app
 
-app.use(cors({origin: 'http://localhost:5100'}));
+app.use(cors({origin: 'http://localhost:5100', credentials: true}));
 app.use(cookieParser());
 app.use(bodyParser.json()); //to read POST requests
 

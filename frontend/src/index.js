@@ -3,9 +3,8 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { render } from 'react-dom';
 import thunk from 'redux-thunk';
-import Generation  from './components/Generation'
-import Dragon from './components/Dragon';
 import rootReducer from './reducers';
+import Root from './components/Root'
 import './index.css';
 import { striped } from './assets';
 //imports and exports are different for browser app. 
@@ -18,11 +17,7 @@ const store = createStore(rootReducer, /* preloadedState, */ composeEnhancers(
 
 render(
     <Provider store={ store }>
-        <div>
-            <h2>Generation from React</h2>
-            <Generation />
-            <Dragon />
-        </div>
+        <Root />
     </Provider>,
     document.getElementById('root')
 )
