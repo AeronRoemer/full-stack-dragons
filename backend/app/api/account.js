@@ -55,4 +55,30 @@ router.get('/logout', (req, res, next) =>{
     res.json({message: 'session logged out'})
 })
 
+router.get('/authenticated', (req, res, next) =>{
+    const { sessionString } = req.cookies
+    if  (!sessionString || !Session.verify(sessionString)){
+        const error = new Error('Invaid Session');
+        error.statusCode = 400;
+        return next(error);
+    } else {
+        const { username, id } = Session.parse(sessionString);
+        
+        AccountTable.getAccount({ usernameHash: hash(username)})
+            .then(({ account }) => {
+                //checks if account session from 'get account' is equal to the session from the given username 
+                const authenticated = account.sessionId === id;
+                res.json({ authenticated });
+                console.log('get-authenticaed')
+            }).catch(error => next(error)); 
+    }
+    AccountTable.updateSessionId({
+        sessionId: null,
+        usernameHash: hash(username)
+    }).then(()=>{
+    }).catch(error => next(error)); 
+    res.json({message: 'session logged out'})
+})
+
+
 module.exports = router;

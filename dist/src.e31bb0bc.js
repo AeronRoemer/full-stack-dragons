@@ -31713,6 +31713,7 @@ var ACCOUNT = {
   FETCH: 'ACCOUNT_FETCH',
   FETCH_ERROR: 'ACCOUNT_FETCH_ERROR',
   FETCH_SUCCESS: 'ACCOUNT_FETCH_SUCCESS',
+  FETCH_AUTHENTICATED_SUCCESS: 'FETCH_AUTHENTICATED_SUCCESS_SUCCESS',
   FETCH_LOGOUT_SUCCESS: 'ACCOUNT_FETCH_LOGOUT_SUCCESS'
 };
 exports.ACCOUNT = ACCOUNT;
@@ -31869,6 +31870,13 @@ var account = function account() {
     case _types.ACCOUNT.FETCH_SUCCESS:
       return _extends({}, state, {
         status: _fetchStates.default.success,
+        message: action.message,
+        loggedIn: true
+      });
+
+    case _types.ACCOUNT.FETCH_AUTHENTICATED_SUCCESS:
+      return _extends({}, state, {
+        status: _fetchStates.default.message,
         message: action.message,
         loggedIn: true
       });
@@ -46863,7 +46871,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.logout = exports.login = exports.signup = void 0;
+exports.logout = exports.fetchAuthenticated = exports.login = exports.signup = void 0;
 
 var _types = require("./types");
 
@@ -46874,7 +46882,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 var fetchFromAccount = function fetchFromAccount(endpoint, methodOptions, actionType) {
   return function (dispatch) {
     //object with extra details for POST. default is GET
-    console.log('clicked');
+    console.log('fetchinFromAccount');
     return fetch("http://localhost:3000/account/".concat(endpoint), methodOptions).then(function (response) {
       return response.json();
     }).then(function (json) {
@@ -46932,6 +46940,14 @@ var login = function login(_ref2) {
 };
 
 exports.login = login;
+
+var fetchAuthenticated = function fetchAuthenticated() {
+  return fetchFromAccount('authenticated', {
+    credentials: 'include'
+  }, _types.ACCOUNT.FETCH_AUTHENTICATED_SUCCESS);
+};
+
+exports.fetchAuthenticated = fetchAuthenticated;
 
 var logout = function logout() {
   return fetchFromAccount('logout', {
@@ -47004,7 +47020,8 @@ var AuthForm = /*#__PURE__*/function (_Component) {
 
     return _possibleConstructorReturn(_this, (_temp = _this = _super.call.apply(_super, [this].concat(args)), _this.state = {
       username: '',
-      password: ''
+      password: '',
+      buttonClicked: false
     }, _this.updateUsername = function (event) {
       _this.setState({
         username: event.target.value
@@ -47018,6 +47035,10 @@ var AuthForm = /*#__PURE__*/function (_Component) {
           username = _this$state.username,
           password = _this$state.password;
 
+      _this.setState({
+        buttonClicked: true
+      });
+
       _this.props.login({
         username: username,
         password: password
@@ -47026,6 +47047,10 @@ var AuthForm = /*#__PURE__*/function (_Component) {
       var _this$state2 = _this.state,
           username = _this$state2.username,
           password = _this$state2.password;
+
+      _this.setState({
+        buttonClicked: true
+      });
 
       _this.props.signup({
         username: username,
@@ -47056,8 +47081,7 @@ var AuthForm = /*#__PURE__*/function (_Component) {
   }, {
     key: "Error",
     get: function get() {
-      //javascript computed property
-      if (this.props.account.status === _fetchStates.default.error) {
+      if (this.state.buttonClicked && this.props.account.status === _fetchStates.default.error) {
         return _react.default.createElement("div", null, "There was an error: ", this.props.account.message);
       }
     }
@@ -47824,7 +47848,7 @@ var _Root = _interopRequireDefault(require("./components/Root"));
 
 require("./index.css");
 
-var _assets = require("./assets");
+var _account = require("./actions/account");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -47834,11 +47858,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 var store = (0, _redux.createStore)(_reducers.default,
 /* preloadedState, */
-composeEnhancers((0, _redux.applyMiddleware)(_reduxThunk.default)));
-(0, _reactDom.render)(_react.default.createElement(_reactRedux.Provider, {
-  store: store
-}, _react.default.createElement(_Root.default, null)), document.getElementById('root'));
-},{"react":"../node_modules/react/index.js","redux":"../node_modules/redux/es/redux.js","react-redux":"../node_modules/react-redux/es/index.js","react-dom":"../node_modules/react-dom/index.js","redux-thunk":"../node_modules/redux-thunk/es/index.js","./reducers":"reducers/index.js","./components/Root":"components/Root.js","./index.css":"index.css","./assets":"assets/index.js"}],"../../../../../../../../../usr/local/lib/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+composeEnhancers((0, _redux.applyMiddleware)(_reduxThunk.default))); //only renders when fetchAuthenticated() is complete 
+
+store.dispatch((0, _account.fetchAuthenticated)()).then(function () {
+  console.log('rendering jsx');
+  (0, _reactDom.render)(_react.default.createElement(_reactRedux.Provider, {
+    store: store
+  }, _react.default.createElement("h1", null, "Rendering from index"), _react.default.createElement(_Root.default, null)), document.getElementById('root'));
+});
+},{"react":"../node_modules/react/index.js","redux":"../node_modules/redux/es/redux.js","react-redux":"../node_modules/react-redux/es/index.js","react-dom":"../node_modules/react-dom/index.js","redux-thunk":"../node_modules/redux-thunk/es/index.js","./reducers":"reducers/index.js","./components/Root":"components/Root.js","./index.css":"index.css","./actions/account":"actions/account.js"}],"../../../../../../../../../usr/local/lib/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -47866,7 +47894,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55088" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58002" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

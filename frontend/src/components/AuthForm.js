@@ -5,7 +5,7 @@ import { signup, login } from '../actions/account';
 import fetchStates from '../reducers/fetchStates';
 
 class AuthForm extends Component{
-    state = { username: '', password: ''}
+    state = { username: '', password: '', buttonClicked: false}
     updateUsername = event => {
         this.setState({username: event.target.value});
     }
@@ -13,18 +13,24 @@ class AuthForm extends Component{
         this.setState({password: event.target.value});
     }
     login = () =>{
-        const { username, password } = this.state
-        this.props.login({ username, password })
+        const { username, password } = this.state;
+        this.setState({buttonClicked: true});
+        this.props.login({ username, password });
+        
     }
     signup = () =>{
-        const { username, password } = this.state
+        const { username, password } = this.state;
+        this.setState({buttonClicked: true});
         this.props.signup({ username, password })
     }
-    get Error(){ //javascript computed property
-        if (this.props.account.status === fetchStates.error){
-            return <div>There was an error: {this.props.account.message}</div>
+    get Error() {
+        if (
+          this.state.buttonClicked &&
+          this.props.account.status === fetchStates.error
+        ) {
+          return <div>There was an error: {this.props.account.message}</div>
         }
-    }
+      }
     render(){
         return(
             <div>

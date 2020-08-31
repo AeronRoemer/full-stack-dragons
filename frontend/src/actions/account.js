@@ -4,7 +4,7 @@ import { ACCOUNT } from './types';
 //in mapDispatchToProps
 const fetchFromAccount = (endpoint,  methodOptions, actionType) => dispatch => {
     //object with extra details for POST. default is GET
-    console.log('clicked')
+    console.log('fetchinFromAccount')
     return fetch(`http://localhost:3000/account/${endpoint}`, methodOptions).then(response => response.json())
         .then(json => { 
             if (json.type === 'error'){
@@ -32,6 +32,10 @@ export const login = ({ username, password }) =>  fetchFromAccount('login', {
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include'
         }, ACCOUNT.FETCH_SUCCESS)
+
+export const fetchAuthenticated = () =>  fetchFromAccount('authenticated', {
+        credentials: 'include'
+        }, ACCOUNT.FETCH_AUTHENTICATED_SUCCESS)
 
 export const logout = () => fetchFromAccount('logout', 
     {credentials: 'include'}, ACCOUNT.FETCH_LOGOUT_SUCCESS)

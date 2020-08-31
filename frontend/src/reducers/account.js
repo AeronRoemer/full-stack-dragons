@@ -12,6 +12,13 @@ const account = ( state = DEFAULT_ACCOUNT, action ) => {
                 status: fetchStates.success, 
                 message: action.message,
                 loggedIn: true };
+        case ACCOUNT.FETCH_AUTHENTICATED_SUCCESS:
+            return {
+                ...state,
+                status: fetchStates.message,
+                message: action.message,
+                loggedIn: true
+            };
         case ACCOUNT.FETCH_LOGOUT_SUCCESS:
             return {
                 ...state,
