@@ -31696,7 +31696,7 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ACCOUNT = exports.GENERATION = exports.DRAGON = void 0;
+exports.ACCOUNT_DRAGONS = exports.ACCOUNT = exports.GENERATION = exports.DRAGON = void 0;
 var DRAGON = {
   FETCH: 'DRAGON_FETCH',
   FETCH_ERROR: 'DRAGON_FETCH_ERROR',
@@ -31717,6 +31717,12 @@ var ACCOUNT = {
   FETCH_LOGOUT_SUCCESS: 'ACCOUNT_FETCH_LOGOUT_SUCCESS'
 };
 exports.ACCOUNT = ACCOUNT;
+var ACCOUNT_DRAGONS = {
+  FETCH: 'ACCOUNT_DRAGON_FETCH',
+  FETCH_ERROR: 'ACCOUNT_DRAGON_FETCH_ERROR',
+  FETCH_SUCCESS: 'ACCOUNT_DRAGON_FETCH_SUCCESS'
+};
+exports.ACCOUNT_DRAGONS = ACCOUNT_DRAGONS;
 },{}],"reducers/fetchStates.js":[function(require,module,exports) {
 "use strict";
 
@@ -46871,7 +46877,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.logout = exports.fetchAuthenticated = exports.login = exports.signup = void 0;
+exports.logout = exports.fetchAuthenticated = exports.login = exports.signup = exports.fetchFromAccount = void 0;
 
 var _types = require("./types");
 
@@ -46879,31 +46885,32 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 //double arrow funciton allows binding 'dispatch' to action creator 
 //in mapDispatchToProps
-var fetchFromAccount = function fetchFromAccount(endpoint, methodOptions, actionType) {
+var fetchFromAccount = function fetchFromAccount(endpoint, methodOptions, FETCH_TYPE, ERROR_TYPE, SUCCESS_TYPE) {
   return function (dispatch) {
     //object with extra details for POST. default is GET
-    console.log('fetchinFromAccount');
     return fetch("http://localhost:3000/account/".concat(endpoint), methodOptions).then(function (response) {
       return response.json();
     }).then(function (json) {
       if (json.type === 'error') {
         dispatch({
-          type: _types.ACCOUNT.FETCH_ERROR,
+          type: ERROR_TYPE,
           message: json.message
         });
       } else {
         dispatch(_extends({
-          type: actionType
+          type: SUCCESS_TYPE
         }, json));
       }
     }).catch(function (error) {
       return dispatch({
-        type: _types.ACCOUNT.FETCH_ERROR,
+        type: ERROR_TYPE,
         message: error.message
       });
     });
   };
 };
+
+exports.fetchFromAccount = fetchFromAccount;
 
 var signup = function signup(_ref) {
   var username = _ref.username,
@@ -46918,7 +46925,7 @@ var signup = function signup(_ref) {
       'Content-Type': 'application/json'
     },
     credentials: 'include'
-  }, _types.ACCOUNT.FETCH_SUCCESS);
+  }, _types.ACCOUNT.FETCH, _types.ACCOUNT.FETCH_ERROR, _types.ACCOUNT.FETCH_SUCCESS);
 };
 
 exports.signup = signup;
@@ -46936,7 +46943,7 @@ var login = function login(_ref2) {
       'Content-Type': 'application/json'
     },
     credentials: 'include'
-  }, _types.ACCOUNT.FETCH_SUCCESS);
+  }, _types.ACCOUNT.FETCH, _types.ACCOUNT.FETCH_ERROR, _types.ACCOUNT.FETCH_SUCCESS);
 };
 
 exports.login = login;
@@ -46944,7 +46951,7 @@ exports.login = login;
 var fetchAuthenticated = function fetchAuthenticated() {
   return fetchFromAccount('authenticated', {
     credentials: 'include'
-  }, _types.ACCOUNT.FETCH_AUTHENTICATED_SUCCESS);
+  }, _types.ACCOUNT.FETCH, _types.ACCOUNT.FETCH_ERROR, _types.ACCOUNT.FETCH_AUTHENTICATED_SUCCESS);
 };
 
 exports.fetchAuthenticated = fetchAuthenticated;
@@ -46952,7 +46959,7 @@ exports.fetchAuthenticated = fetchAuthenticated;
 var logout = function logout() {
   return fetchFromAccount('logout', {
     credentials: 'include'
-  }, _types.ACCOUNT.FETCH_LOGOUT_SUCCESS);
+  }, _types.ACCOUNT.FETCH, _types.ACCOUNT.FETCH_ERROR, _types.ACCOUNT.FETCH_LOGOUT_SUCCESS);
 };
 
 exports.logout = logout;
@@ -47282,7 +47289,10 @@ var fetchDragon = function fetchDragon() {
     dispatch({
       type: _types.DRAGON.FETCH
     });
-    return fetch('http://localhost:3000/dragon/new').then(function (response) {
+    return fetch('http://localhost:3000/dragon/new', {
+      credentials: 'include'
+    }) //includes session string with dragon request
+    .then(function (response) {
       return response.json();
     }).then(function (json) {
       if (json.type === 'error') {
@@ -47894,7 +47904,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58002" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63889" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

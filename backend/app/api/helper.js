@@ -29,5 +29,22 @@ const setSessionCookie = ({ sessionString, res }) =>{
         httpOnly: true, //for security - no client side JS to detect cookie info
     }); 
 }
-
-module.exports = {setSession};
+const authenticatedAccount = ({ sessionString }) => {
+    return new Promise((resolve, reject) => {
+        if  (!sessionString || !Session.verify(sessionString)){
+            const error = new Error('Invaid Session');
+            error.statusCode = 400;
+            return reject(error);
+        } else {
+            const { username, id } = Session.parse(sessionString);
+            
+            AccountTable.getAccount({ usernameHash: hash(username)})
+                .then(({ account }) => {
+                    //checks if account session from 'get account' is equal to the session from the given username 
+                    const authenticated = account.sessionId === id;
+                    resolve({ account, authenticated })
+                }).catch(error => reject(error)); 
+        }
+    })
+}
+module.exports = { setSession, authenticatedAccount };

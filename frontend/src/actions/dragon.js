@@ -3,7 +3,9 @@ import { DRAGON } from './types';
 //needs a thunk because it is async
 export const fetchDragon = () => dispatch => {
     dispatch({type: DRAGON.FETCH})
-    return fetch('http://localhost:3000/dragon/new')
+    return fetch('http://localhost:3000/dragon/new', {
+        credentials: 'include' 
+    })//includes session string with dragon request
         .then(response => response.json())
         .then(json => {
             if (json.type === 'error'){
