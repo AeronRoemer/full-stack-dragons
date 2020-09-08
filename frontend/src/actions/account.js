@@ -9,9 +9,12 @@ export const fetchFromAccount = (
     ERROR_TYPE,
     SUCCESS_TYPE
     ) => dispatch => {
+    dispatch({ type: FETCH_TYPE });
+    console.log(FETCH_TYPE, SUCCESS_TYPE)
     //object with extra details for POST. default is GET
     return fetch(`http://localhost:3000/account/${endpoint}`, methodOptions).then(response => response.json())
         .then(json => { 
+            console.log(json)
             if (json.type === 'error'){
                 dispatch({ type: ERROR_TYPE, message: json.message})
             } else {

@@ -25,11 +25,10 @@ class DragonAvatar extends Component{
         const dragon = this.props.dragon;
         
         return (
-            <div className="dragon-avatar-image-wrapper">
-                    <div className='dragon-avatar-image-background' style={{ backgroundColor, sizing }}>
-                        <img src={pattern} className='dragon-avatar-image-pattern' style={ sizing }></img>
-                        <img src={build} className='dragon-avatar-image' style={ sizing }></img>
-                        </div>
+            <div className='dragon-avatar-image-wrapper'>
+                <div className='dragon-avatar-image-background' style={{ backgroundColor, ...sizing }}></div>
+                <img src={pattern} className='dragon-avatar-image-pattern' style={{ ...sizing }} />
+                <img src={build} className='dragon-avatar-image' style={{ ...sizing }} />
             </div>
         );
     }

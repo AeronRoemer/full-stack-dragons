@@ -48,6 +48,7 @@ router.post('/login', (req, res, next)=>{
 
 router.get('/logout', (req, res, next) =>{
     const { username } = Session.parse(req.cookies.sessionString);
+    console.log('logging out')
     AccountTable.updateSessionId({
         sessionId: null,
         usernameHash: hash(username)
